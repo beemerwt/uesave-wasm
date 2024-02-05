@@ -1,6 +1,6 @@
 [package]
-name = "uesave-wasm"
-version = "0.1.0"
+name = "uesave-rs-wasm"
+version = "0.1.5"
 authors = ["beemer"]
 edition = "2018"
 

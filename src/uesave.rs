@@ -117,7 +117,7 @@ fn read_properties_until_none<R: Read + Seek>(reader: &mut Context<R>, progress:
             }
         }
 
-        let mut is_parsed = false;
+        let is_parsed = false;
         #[cfg(feature = "parse_raw_data")]
         if name == "RawData" {
             match &prop {
@@ -367,7 +367,7 @@ impl<'stream, 'header, 'types, 'scope, R: Read + Seek>
     where
         'types: 't,
     {
-        let offset = self.stream.stream_position()?;
+        let _offset = self.stream.stream_position()?;
         Ok(self.get_type().unwrap_or_else(|| t))
     }
 }
@@ -402,8 +402,9 @@ pub enum PropertyType {
     MapProperty,
     StructProperty,
 }
+
 impl PropertyType {
-    fn get_name(&self) -> &str {
+    pub fn get_name(&self) -> &str {
         match &self {
             PropertyType::Int8Property => "Int8Property",
             PropertyType::Int16Property => "Int16Property",
@@ -583,7 +584,7 @@ type UInt64 = u64;
 type Float = f32;
 type Double = f64;
 type Bool = bool;
-type Enum = String;
+pub type Enum = String;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct MapEntry {
@@ -634,8 +635,8 @@ impl FieldPath {
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Delegate {
-    name: String,
-    path: String,
+    pub name: String,
+    pub path: String,
 }
 impl Delegate {
     fn read<R: Read + Seek>(reader: &mut Context<R>) -> TResult<Self> {
@@ -831,7 +832,7 @@ impl Color {
         Ok(())
     }
 }
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Vector {
     pub x: f64,
     pub y: f64,
@@ -884,7 +885,7 @@ impl Vector2D {
         Ok(())
     }
 }
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Box {
     pub a: Vector,
     pub b: Vector,
@@ -1132,7 +1133,7 @@ impl<W: Write> Writable<W> for FNumberFormattingOptions {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Text {
     flags: u32,
-    variant: TextVariant,
+    pub variant: TextVariant,
 }
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub enum TextVariant {
